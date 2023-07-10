@@ -12,7 +12,7 @@ app.use("/users", userRoutes)
 
 
 
-const uri = "mongodb+srv://nobelium24:oluwatobi@cluster0.1sfkfgv.mongodb.net/yetAnotherNodeClass?retryWrites=true&w=majority"
+const uri = "mongodb+srv://nobelium24:oluwatobi@cluster0.1sfkfgv.mongodb.net/yetAnotherNodeClass2?retryWrites=true&w=majority"
 
 
 
