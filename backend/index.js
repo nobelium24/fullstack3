@@ -3,8 +3,8 @@ const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 const userRoutes = require("./routes/userRoute")
-
 const app = express()
+require("dotenv").config()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors({ origin: "*" }))
@@ -12,7 +12,7 @@ app.use("/users", userRoutes)
 
 
 
-const uri = "mongodb+srv://nobelium24:oluwatobi@cluster0.1sfkfgv.mongodb.net/yetAnotherNodeClass2?retryWrites=true&w=majority"
+const uri = process.env.MONGO_URI
 
 
 

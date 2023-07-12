@@ -1,5 +1,7 @@
 const userModel = require("../models/user.model")
 const bcryptJs = require("bcryptjs")
+const { generateToken, verifyToken } = require("../services/sessions")
+
 
 const register = async (req, res) => {
     try {
@@ -21,9 +23,13 @@ const register = async (req, res) => {
 
 const viewUsers = async (req, res) => {
     try {
+        const token = req.headers.authorization.split(" ")[1]
+        const email = verifyToken(token)
+        const user = userModel.findOne({email:email})
+        if(!user) return res.status(404).send({message:"User not found", status: false})
         const users = await userModel.find({}, {userName: 1, email: 1})
         console.log(users)
-        res.status(200).send(users)
+        return res.status(200).send(users)
     } catch (error) {
         console.log(error)
         return res.status(500).send({ message: "Internal server error", status: false })
@@ -42,7 +48,8 @@ const login = async (req, res)=>{
         if(!isMatch){
             return res.status(401).send({message:"Invalid password", status:false})
         }
-        return res.status(200).send({message:`Welcome, ${user.userName}`, status:true})
+        const token = generateToken(email)
+        return res.status(200).send({message:`Welcome, ${user.userName}`, status:true, token})
     }catch(error){
         console.log(error)
     }
