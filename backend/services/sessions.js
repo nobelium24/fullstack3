@@ -7,7 +7,10 @@ const generateToken = (email) => {
         return token
     } catch (error) {
         console.log(error)
-        throw error
+        throw {
+            name:"TokenGenerationError",
+            message:"Error generating token"
+        }
     }
 }
 
@@ -20,7 +23,10 @@ const verifyToken = (token) => {
         return email
     } catch (error) {
         console.log(error)
-        throw error
+        throw {
+            name:"TokenVerificationError",
+            message:`Error verifying token`
+        }
     }
 }
 

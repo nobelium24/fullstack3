@@ -1,9 +1,10 @@
 const userModel = require("../models/user.model")
 const bcryptJs = require("bcryptjs")
 const { generateToken, verifyToken } = require("../services/sessions")
+const {sendMessage} = require("../utilities/mailer")
 
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
         let { userName, email, password } = req.body
         const newUser = new userModel({
@@ -14,14 +15,14 @@ const register = async (req, res) => {
 
         const result = await newUser.save()
         console.log(result)
+        sendMessage(email)
         return res.status(201).send({ message: "Registration Successful", status: true })
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({ message: "Internal server error", status: false })
+        next(error)
     }
 }
 
-const viewUsers = async (req, res) => {
+const viewUsers = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1]
         const email = verifyToken(token)
@@ -31,12 +32,11 @@ const viewUsers = async (req, res) => {
         console.log(users)
         return res.status(200).send(users)
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({ message: "Internal server error", status: false })
+        next(error)
     }
 }
 
-const login = async (req, res)=>{
+const login = async (req, res, next)=>{
     try{
         const {email, password} = req.body
         const user = await userModel.findOne({email})
@@ -51,7 +51,7 @@ const login = async (req, res)=>{
         const token = generateToken(email)
         return res.status(200).send({message:`Welcome, ${user.userName}`, status:true, token})
     }catch(error){
-        console.log(error)
+        next(error)
     }
 }
 
